@@ -1,0 +1,18 @@
+# Step 1: Set up Python environment
+FROM python:3.9
+
+# Set the working directory for the backend
+WORKDIR /app
+
+# Copy the requirements file and install Python dependencies
+COPY requirements.txt ./
+RUN pip install -r requirements.txt
+
+# Copy the backend code (including app.py)
+COPY app.py ./
+
+# Expose the necessary port
+EXPOSE 5000
+
+# Start the Python server
+CMD ["python", "app.py"]
