@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import HeaterTubeSimulation from "./HeaterTubeSimulation";
+import React, { useState, useRef } from "react";
 import ChatLayout from "./ChatLayout"; // Import ChatLayout instead of Chatbot
 import drive from "../image/drive.jpg";
 import lot from "../image/lot.jpg";
@@ -79,65 +78,6 @@ const Home = () => {
   };
   const [isMobile, setIsMobile] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
-  const chatWindowRef = useRef(null); // Create a ref for the chat window
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
-
-  const pageStyles = {
-    container: {
-      position: "relative",
-      padding: "20px",
-    },
-    chatIcon: {
-      position: "fixed",
-      bottom: "20px",
-      right: "20px",
-      width: "60px",
-      height: "60px",
-      backgroundColor: "#007BFF",
-      color: "#fff",
-      borderRadius: "50%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      cursor: "pointer",
-      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-      transition: "transform 0.3s",
-      zIndex: 1000, // Ensure it's above other elements
-    },
-    chatWindow: {
-      position: "fixed",
-      bottom: "80px",
-      right: "20px",
-      width: isMobile ? "90%" : "300px",
-      height: "500px",
-      border: "1px solid #007BFF",
-      borderRadius: "8px",
-      backgroundColor: "#fff",
-      display: isChatOpen ? "block" : "none",
-      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-      overflow: "hidden",
-      transition: "opacity 0.3s",
-      opacity: isChatOpen ? 1 : 0,
-      zIndex: 1000, // Ensure it's above other elements
-    },
-    chatHeader: {
-      backgroundColor: "#007BFF",
-      color: "#fff",
-      padding: "10px",
-      borderTopLeftRadius: "8px",
-      borderTopRightRadius: "8px",
-      textAlign: "center",
-      fontSize: "16px",
-      fontWeight: "bold",
-    },
-    chatBody: {
-      height: "calc(100% - 60px)",
-      padding: "10px",
-      overflowY: "auto",
-    },
-  };
 
   return (
     <div>
