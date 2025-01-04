@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { gapi } from 'gapi-script';
-import Dashboard from './Dashboard'; // Ensure this is correctly imported
 import Chatbot from "./Chatbot"; // Ensure this path is correct based on your project structure
 
 

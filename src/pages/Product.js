@@ -1,77 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import "./Products.css"; // Optional: External CSS for styling
 import ChatLayout from "./ChatLayout";
 
 const Products = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
-  const chatWindowRef = useRef(null); // Create a ref for the chat window
-
-  const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
-  };
-
-  const pageStyles = {
-    container: {
-      display: "flex",
-      justifyContent: isMobile ? "center" : "space-between",
-      padding: "20px",
-      flexWrap: "wrap",
-      flexDirection: isMobile ? "column" : "row",
-    },
-    column: {
-      width: isMobile ? "100%" : "48%",
-      textAlign: "center",
-      marginBottom: "20px",
-    },
-    image: {
-      width: "100%",
-      height: "auto",
-      borderRadius: "8px",
-    },
-    button: {
-      backgroundColor: "#007BFF",
-      color: "#fff",
-      padding: "10px 20px",
-      border: "none",
-      cursor: "pointer",
-    },
-    chatIcon: {
-      position: "fixed",
-      bottom: "20px",
-      right: "20px",
-      width: "60px",
-      height: "60px",
-      backgroundColor: "#007BFF",
-      color: "#fff",
-      borderRadius: "50%",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      cursor: "pointer",
-      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-    },
-    chatWindow: {
-      position: "fixed",
-      bottom: "80px",
-      right: "20px",
-      width: "300px",
-      height: "500px", // Updated height from 400px to 500px
-      border: "1px solid #007BFF",
-      borderRadius: "8px",
-      backgroundColor: "#fff",
-      display: isChatOpen ? "block" : "none",
-      boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-      overflow: "hidden",
-    },
-    chatHeader: {
-      backgroundColor: "#007BFF",
-      color: "#fff",
-      padding: "10px",
-      borderTopLeftRadius: "8px",
-      borderTopRightRadius: "8px",
-    },
-  };
+  
   return (
     <div>
       {/* Top section with machine image */}
