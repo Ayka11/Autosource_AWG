@@ -95,7 +95,7 @@ const sat_vap_p = (t) => {
 const flowCalc = (p1, v1, t1, rh, t2, p2, p, v, t) => {
   // Convert temperature to Kelvin
   const t1_K = t1 + 273.15;
-  const t2_K = t2 + 273.15;
+  // const t2_K = t2 + 273.15;
   const t_K = t + 273.15;
 
   // Mole fractions (inlet air)
