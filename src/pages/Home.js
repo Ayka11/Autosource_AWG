@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React from "react";
 import ChatLayout from "./ChatLayout"; // Import ChatLayout instead of Chatbot
 import drive from "../image/drive.jpg";
 import lot from "../image/lot.jpg";
