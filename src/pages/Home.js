@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState} from "react";
 import ChatLayout from "./ChatLayout"; // Import ChatLayout instead of Chatbot
 import drive from "../image/drive.jpg";
 import lot from "../image/lot.jpg";
@@ -76,8 +76,6 @@ const Home = () => {
       },
     },
   };
-  const [isMobile, setIsMobile] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
 
   return (
     <div>
