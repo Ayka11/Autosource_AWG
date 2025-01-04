@@ -1,7 +1,6 @@
 import React from "react";
 import ChatLayout from "./ChatLayout";
 import source from "../image/source.jpg";
-import gen from "../image/gen.png";
 import stab from "../image/stab.jpg";
 import large from "../image/large.jpg";
 import small from "../image/small.jpg";
