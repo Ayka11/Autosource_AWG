@@ -1,10 +1,9 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import "./Products.css"; // Optional: External CSS for styling
 import ChatLayout from "./ChatLayout";
 
 const Products = () => {
-  const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
-
+  
   return (
     <div>
       {/* Top section with machine image */}
