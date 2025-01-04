@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Chatbot from "./Chatbot"; // Ensure this path is correct based on your project structure
 
 const ChatLayout = () => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [, setIsMobile] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
   const [showTooltip, setShowTooltip] = useState(false); // State to control tooltip visibility
   const chatWindowRef = useRef(null); // Create a ref for the chat window
