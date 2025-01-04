@@ -44,7 +44,7 @@ const FAQ_QUESTIONS = [
 
 const Chatbot = () => {
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [typing, setTyping] = useState(false);
   const [history, setHistory] = useState(() => {
     const savedHistory = sessionStorage.getItem("chatHistory");
