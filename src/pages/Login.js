@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { gapi } from 'gapi-script';
 import Chatbot from "./Chatbot"; // Ensure this path is correct based on your project structure
 
+
 const CLIENT_ID = '779410445796-9m6ip62p95thpt63gs6369ojo45d46a9.apps.googleusercontent.com';
 
 function Login() {
@@ -25,14 +26,15 @@ function Login() {
     start();
   }, []);
   
-  const [isMobile] = useState(false);
+   const [isMobile,] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
   const chatWindowRef = useRef(null); // Create a ref for the chat window
-  const toggleChat = () => {
+   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
 
-  const pageStyles = {
+  
+   const pageStyles = {
     container: {
       display: "flex",
       justifyContent: isMobile ? "center" : "space-between",
@@ -110,6 +112,8 @@ function Login() {
 
       // Navigate to dashboard after successful login
       navigate('/dashboard'); // Change this to your dashboard route
+
+      // window.location.reload(); // Remove this line to avoid reloading
     }).catch(error => {
       console.error('Error during Google OAuth login:', error);
       alert('Failed to login. Please try again.');
@@ -132,17 +136,21 @@ function Login() {
           Login Now with Google
         </button>
       </div>
-
-      {/* Chat Icon */}
+	  
+	    {/* Chat Icon */}
       <div style={pageStyles.chatIcon} onClick={toggleChat}>
         💬
       </div>
-
-      {/* Chat Window with Chatbot */}
+	  
+	  
+	  {/* Chat Window with Chatbot */}
       <div style={pageStyles.chatWindow} ref={chatWindowRef}>
+        {" "}
+        {/* Attach ref here */}
         <div style={pageStyles.chatHeader}>Chat with Us</div>
         <Chatbot /> {/* Integrate Chatbot component */}
       </div>
+	
     </div>
   );
 }
