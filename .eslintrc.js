@@ -1,5 +1,9 @@
 module.exports = {
-  "rules": {
-    "no-unused-vars": "warn"  // Treat unused variables as warnings
+  extends: [
+    'react-app',
+    'react-app/jest'
+  ],
+  rules: {
+    // Custom rules here if needed
   }
 };

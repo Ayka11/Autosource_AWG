@@ -1,5 +1,4 @@
 module.exports = {
-  transformIgnorePatterns: [
-    "/node_modules/(?!gapi-script)/" // This will transform the `gapi-script` module
-  ]
+  setupFiles: ["./jest.setup.js"], // Point to your setup file
+  transformIgnorePatterns: ["/node_modules/(?!gapi-script)/"], // Ensure gapi-script is processed
 };
