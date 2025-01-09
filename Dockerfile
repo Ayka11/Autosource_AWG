@@ -1,25 +1,18 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18
+# Use official Node.js image from Docker Hub
+FROM node:20-lts
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
 # Copy package.json and install dependencies
-COPY package.json /app
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Copy the rest of the application code
-COPY . /app
+# Copy the rest of the app's files
+COPY . .
 
-# Build the React app for production
-RUN npm run build
-
-# Install and configure Nginx to serve the React app
-RUN apt-get update && apt-get install -y nginx
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
-# Expose the port that the app will run on
+# Expose port 8080
 EXPOSE 8080
 
-# Run the app with Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run the app
+CMD ["npm", "start"]
