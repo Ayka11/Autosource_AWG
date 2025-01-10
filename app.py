@@ -1,6 +1,25 @@
+import os
+from dotenv import load_dotenv
+
+
+from google.cloud import aiplatform
+
+
+
+
+# Load environment variables from a .env file (if you have one)
+load_dotenv()
+
+# Set Google Application Credentials
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/app/key.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "sc-1-433715-558af7a8b81b.json"
+
+# Now your application can use Google services as needed
+
 from flask import Flask, request, jsonify
 import vertexai
 from vertexai.generative_models import GenerativeModel, SafetySetting
+from google.cloud import aiplatform
 
 app = Flask(__name__)
 
@@ -11,10 +30,10 @@ CORS(app)
 # Your FAQ data and chatbot logic goes here
 # FAQ dataset
 faq_data = {
-    "hi": "Hello! How can I assist you today?",
-    "hello": "Hi there! Feel free to ask me anything.",
-    "hey": "Hey! How can I help you today?",
-    "how are you": "I'm just a bot, but thanks for asking! How can I assist you?",
+   "hi": "Hello, this is the AWG chatbot! How can I assist you today?",
+    "hello": "Hi there! This is the AWG chatbot. Feel free to ask me anything.",
+    "hey": "Hey! You’re chatting with the AWG chatbot. How can I help you?",
+    "how are you": "I'm just a bot, but I'm here to help! What do you need assistance with?",
     "what's up": "Not much, just ready to answer your questions!",
     "What is an AWG?": "An Atmospheric Water Generator (AWG) is a device that extracts water from the humidity in the air. It works by cooling air to its dew point, causing water vapor to condense into liquid water, which is then collected and purified for use.",
     "Can the AWG be used in all climates?": "AWGs are most efficient in humid climates. In very dry or cold climates, performance may be reduced, so check the manufacturer’s specifications for suitability.",
@@ -39,6 +58,8 @@ faq_data = {
     "How can I contact customer support for the AWG?": "Customer support can be reached through the website's support page, by phone, or via email. Contact details are available on the website and in the user manual.",
     "What should I do if the AWG breaks down during the warranty period?": "Contact customer support with your warranty information and serial number. The team will guide you through the repair or replacement process as per the warranty terms."
 }
+
+
 generation_config = {
     "max_output_tokens": 8192,
     "temperature": 1,
@@ -69,9 +90,43 @@ def generate_chatbot_response(user_prompt):
     for question, answer in faq_data.items():
         if question.lower() in user_prompt.lower():
             return answer
-    model = GenerativeModel("gemini-1.5-flash-002", system_instruction="You are an assistant chatbot...")
+    model = GenerativeModel(
+      "gemini-1.5-flash-002",system_instruction="You are an assistant chatbot for my atmospheric water generator, give intelligent response to my faq, meaning that if user ask questions relating to the faq, give them the answers, it must not be word for word :" + str(faq_data) + " please occasioanally, ask my customers to send their email to chat so we can  know there are here, do this after providing answers to questions, occasionally, tell them, no worries if they have done that already"
+      
+    )
+    
+    # Initialize the AI Platform client
+    PROJECT_ID = "sc-1-433715"
+    LOCATION_ID = "us-central1"  # Change to a supported region
+    ENDPOINT_ID="us-central1-aiplatform.googleapis.com"
+    
+
+    # Define your endpoint
+    endpoint = aiplatform.Endpoint(endpoint_name=f"projects/{PROJECT_ID}/locations/{LOCATION_ID}/endpoints/{ENDPOINT_ID}")
+
+    # Prepare the input data
+    instances = [{"content": "Your input data here"}]
+
+    # Make a prediction
+    #response = endpoint.predict(instances=instances)
+    #print('res',response)
+    
+    #model = GenerativeModel("gemini-1.5-flash-002", system_instruction="You are an assistant chatbot...")
     responses = list(model.generate_content([user_prompt], generation_config=generation_config, safety_settings=safety_settings, stream=True))
-    return responses[0].text if responses else "I couldn't find an answer to that."
+    
+   
+    #chat = model.start_chat(response_validation=False)
+    
+    #re=chat.send_message([user_prompt],generation_config=generation_config,safety_settings=safety_settings )
+    #print(responses[1].candidates[0].content.parts)
+    text = ""
+
+    for r in responses:
+        text+=r.candidates[0].content.parts[0].text
+    
+    return text
+   
+ 
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -84,4 +139,4 @@ def chat():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=5000)
+    app.run(host='0.0.0.0',port=8080)
