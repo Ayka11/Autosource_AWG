@@ -53,11 +53,13 @@ const Chatbot = () => {
   const [chatOpened, setChatOpened] = useState(false);
   const [showFAQ, setShowFAQ] = useState(false);
   const chatHistoryRef = useRef(null);
-
+  
+  //https://python-app-779410445796.us-central1.run.app/chat
+  
   const makeRequest = async (questions) => {
     try {
       const response = await fetch(
-        "https://python-app-779410445796.us-central1.run.app/chat",
+        "https://autosourcebackend.azurewebsites.net/chat",
         {
           method: "POST",
           headers: {
