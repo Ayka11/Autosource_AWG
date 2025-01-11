@@ -58,3 +58,5 @@ jobs:
         with:
           app-name: 'autosources'
           slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_759BA844499A44F0A35B357488C76F06 }}
