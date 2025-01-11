@@ -7,7 +7,7 @@ name: Build and deploy Python app to Azure Web App - audiotocolor
 on:
   push:
     branches:
-      - main
+      - python
   workflow_dispatch:
 
 jobs:
