@@ -65,9 +65,10 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7706CB8EBE9D4B8EB2E4062F8611729B }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_777E39E386D340CAA5FF6B8EEEA274E3 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B5F5581E309249E88EBB4B19E38F87E6 }}
+          app-name: 'autosources'
+          slot-name: 'Production'
+          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_759BA844499A44F0A35B357488C76F06 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
