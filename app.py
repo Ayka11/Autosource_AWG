@@ -23,8 +23,8 @@ from google.cloud import aiplatform
 
 app = Flask(__name__)
 
-from flask_cors import CORS
-CORS(app)
+#from flask_cors import CORS
+#CORS(app)
 
 
 # Your FAQ data and chatbot logic goes here
@@ -127,6 +127,10 @@ def generate_chatbot_response(user_prompt):
     return text
    
  
+@app.route('/')
+def home():
+
+   return 'Everything is good'
 
 @app.route('/chat', methods=['POST'])
 def chat():
