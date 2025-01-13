@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import { gapi } from 'gapi-script';
-import Dashboard from './Dashboard'; // Ensure this is correctly imported
 import Chatbot from "./Chatbot"; // Ensure this path is correct based on your project structure
 
 
@@ -27,7 +26,7 @@ function Login() {
     start();
   }, []);
   
-   const [isMobile, setIsMobile] = useState(false);
+   const [isMobile, ] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
   const chatWindowRef = useRef(null); // Create a ref for the chat window
    const toggleChat = () => {
