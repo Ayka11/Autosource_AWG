@@ -25,6 +25,8 @@ from google.cloud import aiplatform
 
 app = Flask(__name__)
 
+from flask_cors import CORS
+CORS(app)
 
 # Your FAQ data and chatbot logic goes here
 # FAQ dataset
@@ -138,4 +140,4 @@ def chat():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port=8080)
