@@ -1,0 +1,54 @@
+# Cloud Build: on push to GitHub, build Docker image and deploy to Cloud Run.
+# Prerequisites:
+# 1) Artifact Registry repo named ${_AR_REPOSITORY} in ${_REGION} (create once in Console).
+# 2) On the Cloud Build trigger, set substitution variables (Secrets recommended for API keys):
+#    _REACT_APP_GOOGLE_CLIENT_ID
+#    _REACT_APP_VERTEX_API_KEY
+# 3) Grant Cloud Run deploy permission to the Cloud Build service account.
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+substitutions:
+  _REGION: us-central1
+  _SERVICE_NAME: awg-web
+  # Docker repository name in Artifact Registry (create if missing)
+  _AR_REPOSITORY: awg-docker
+  # Set these on the trigger — do not commit real secrets to git
+  _REACT_APP_GOOGLE_CLIENT_ID: ""
+  _REACT_APP_VERTEX_API_KEY: ""
+
+steps:
+  - id: docker-build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - REACT_APP_GOOGLE_CLIENT_ID=${_REACT_APP_GOOGLE_CLIENT_ID}
+      - --build-arg
+      - REACT_APP_VERTEX_API_KEY=${_REACT_APP_VERTEX_API_KEY}
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - .
+
+  - id: docker-push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+
+  - id: deploy-cloud-run
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
+      - --region=${_REGION}
+      - --platform=managed
+      - --allow-unauthenticated
+      - --quiet
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_SERVICE_NAME}:$SHORT_SHA
