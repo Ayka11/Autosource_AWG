@@ -19,5 +19,4 @@ RUN npm run build
 ENV NODE_ENV=production
 EXPOSE 8080
 
-# Cloud Run sets PORT; server.js reads process.env.PORT
 CMD ["npm", "run", "start:prod"]
