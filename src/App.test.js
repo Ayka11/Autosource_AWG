@@ -1,16 +1,3 @@
-// Mocking the gapi-script module
-jest.mock("gapi-script", () => ({
-  gapi: {
-    load: jest.fn(),
-    auth2: {
-      getAuthInstance: jest.fn(),
-    },
-    client: {
-      init: jest.fn(),
-    },
-  },
-}));
-
 // Importing necessary functions from React Testing Library
 import { render, screen } from "@testing-library/react"; // Only import from @testing-library/react
 import App from "./App"; // Your App component

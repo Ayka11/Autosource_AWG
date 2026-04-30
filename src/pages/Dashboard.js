@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import './Dashboard.css'; // Assuming the CSS file is named Dashboard.css
+import { useNavigate } from "react-router-dom";
 import HeaterTubeSimulation from './HeaterTubeSimulation';
 import Chatbot from "./Chatbot"; // Ensure this path is correct based on your project structure
+import { clearAuthSession, getAuthSession, isAuthenticated } from "../utils/auth";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     name: '',
     email: '',
-    photo: ''
+    photo: '',
+    userName: '',
   });
    const [isMobile] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false); // State to manage chat visibility
@@ -79,32 +83,39 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    // Fetch user data from local storage or an API
-    const name = localStorage.getItem('username');
-    const email = localStorage.getItem('useremail'); // Assuming you store the user's email in local storage
-    const photo = localStorage.getItem('userphoto'); // Assuming you store the user's profile photo URL in local storage
+    if (!isAuthenticated()) {
+      navigate('/login', { replace: true });
+      return;
+    }
 
-    setUser({
-      name: name || 'N/A',
-      email: email || 'N/A',
-      photo: photo || 'default-profile-photo-url' // Replace with a default photo URL
+    const session = getAuthSession();
+
+    const mapSessionToUser = (s) => ({
+      name: s.name || 'N/A',
+      email: s.email || 'N/A',
+      photo: s.photo || 'https://via.placeholder.com/120',
+      userName: s.userName || '',
     });
-  }, []);
+
+    setUser(mapSessionToUser(session));
+  }, [navigate]);
 
   return (
     <div className="dashboard">
       <div className="profile">
         <img src={user.photo} alt="Profile" className="profile-photo" />
         <h2 className="profile-name">{user.name}</h2>
+        {user.userName && (
+          <p className="profile-username" style={{ fontWeight: 600 }}>
+            @{user.userName}
+          </p>
+        )}
         <p className="profile-email">{user.email}</p>
 		<HeaterTubeSimulation />
       </div>
       <button className="logout-button" onClick={() => {
-        localStorage.removeItem('oauth_token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('useremail');
-        localStorage.removeItem('userphoto');
-        window.location.href = '/login';
+        clearAuthSession();
+        navigate('/login', { replace: true });
       }}>
         Logout
       </button>

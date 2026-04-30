@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Header.css'; // Assuming external CSS
 import logo from './logo.jpg';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { AUTH_EVENTS, clearAuthSession, getAuthSession } from '../utils/auth';
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -9,27 +10,31 @@ const Header = () => {
   const [username, setUsername] = useState(''); // Store username
   const [showLogout, setShowLogout] = useState(false); // Track if logout popup should be shown
   const navigate = useNavigate(); // Initialize useNavigate
+  const location = useLocation();
 
   useEffect(() => {
-    // Check if the user is logged in by looking for an OAuth2 token in local storage
-    const token = localStorage.getItem('oauth_token');
-    const user = localStorage.getItem('username');
-    if (token) {
-      setIsLoggedIn(true);
-      setUsername(user || '');
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, []);
+    const syncAuthState = () => {
+      const session = getAuthSession();
+      setIsLoggedIn(Boolean(session.token));
+      setUsername(session.userName || session.name || '');
+    };
+
+    syncAuthState();
+    window.addEventListener(AUTH_EVENTS.changed, syncAuthState);
+    window.addEventListener('storage', syncAuthState);
+
+    return () => {
+      window.removeEventListener(AUTH_EVENTS.changed, syncAuthState);
+      window.removeEventListener('storage', syncAuthState);
+    };
+  }, [location.pathname]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
   const handleLogout = () => {
-    // Clear OAuth2 token and username from localStorage
-    localStorage.removeItem('oauth_token');
-    localStorage.removeItem('username');
+    clearAuthSession();
     setIsLoggedIn(false); // Set the user as logged out
     setUsername('');
     setShowLogout(false);
@@ -52,7 +57,7 @@ const Header = () => {
         <h1 className="site-title">Atmospheric Water Generator</h1>
       </div>
       <nav className={`nav-links ${menuOpen ? 'mobile-menu-open' : ''}`}>
-        <a href="/" className="nav-item">Home</a>
+        <Link to="/" className="nav-item">Home</Link>
         {isLoggedIn ? (
           <div className="username-container">
             <div className="username" onClick={handleUsernameClick}>
@@ -66,11 +71,14 @@ const Header = () => {
             )}
           </div>
         ) : (
-          <a href="/login" className="nav-item">Login</a>
+          <>
+            <Link to="/login" className="nav-item">Login</Link>
+            <Link to="/signup" className="nav-item">Sign up</Link>
+          </>
         )}
-        <a href="/about" className="nav-item">About Us</a>
-        <a href="/contact" className="nav-item">Contact Us</a>
-        <a href="/products" className="nav-item">Products</a>
+        <Link to="/about" className="nav-item">About Us</Link>
+        <Link to="/contact" className="nav-item">Contact Us</Link>
+        <Link to="/products" className="nav-item">Products</Link>
       </nav>
       <div className="hamburger" onClick={toggleMenu}>
         <div className={`bar ${menuOpen ? 'open' : ''}`}></div>
