@@ -5,6 +5,7 @@ import bot from "../icon/bot.svg";
 import user1 from "../icon/user1.svg";
 import publish from "../icon/publish.svg";
 import faqIcon from "../icon/faq.png"; // Import your FAQ icon
+import { getVertexApiKey } from "../utils/runtimeConfig";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 
@@ -64,7 +65,7 @@ const Chatbot = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.REACT_APP_VERTEX_API_KEY}`, // Add your API key
+            Authorization: `Bearer ${getVertexApiKey()}`, // Cloud Run: REACT_APP_VERTEX_API_KEY
           },
           body: JSON.stringify({ input: questions }),
         }
