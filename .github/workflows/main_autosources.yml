@@ -1,0 +1,81 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+#
+# Deploy auth: add repo secret AZURE_CREDENTIALS (JSON from Azure CLI):
+#   az ad sp create-for-rbac --name "github-actions-awgautosource" --role contributor \
+#     --scopes /subscriptions/5a4937f9-4275-4c47-b6d9-6ff040675a76/resourceGroups/autosource/providers/Microsoft.Web/sites/awgautosource \
+#     --sdk-auth
+# Paste the full JSON output into GitHub → Settings → Secrets → AZURE_CREDENTIALS
+#
+# GitHub Secrets required:
+#   AZURE_CREDENTIALS        - Azure service principal JSON
+#   REACT_APP_VERTEX_API_KEY - Vertex AI API key
+# GitHub Variables required:
+#   REACT_APP_GOOGLE_CLIENT_ID - Google OAuth client ID
+
+name: Build and deploy Node.js app to Azure Web App - awgautosource
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24.x'
+
+      - name: npm install, build, and test
+        env:
+          REACT_APP_GOOGLE_CLIENT_ID: ${{ vars.REACT_APP_GOOGLE_CLIENT_ID }}
+          REACT_APP_VERTEX_API_KEY: ${{ secrets.REACT_APP_VERTEX_API_KEY }}
+        run: |
+          npm install
+          npm run build --if-present
+          npm run test --if-present
+
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: release.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
+
+      - name: Unzip artifact for deployment
+        run: unzip release.zip
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Deploy to Azure Web App'
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'awgautosource'
+          slot-name: 'Production'
+          package: .
