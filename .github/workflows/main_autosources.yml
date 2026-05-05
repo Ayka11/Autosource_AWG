@@ -1,14 +1,15 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 #
-# Deploy auth: add repo secret AZURE_CREDENTIALS (JSON from Azure CLI):
+# Deploy auth: add repo secrets from Azure CLI:
 #   az ad sp create-for-rbac --name "github-actions-awgautosource" --role contributor \
 #     --scopes /subscriptions/5a4937f9-4275-4c47-b6d9-6ff040675a76/resourceGroups/autosource/providers/Microsoft.Web/sites/awgautosource \
 #     --sdk-auth
-# Paste the full JSON output into GitHub → Settings → Secrets → AZURE_CREDENTIALS
 #
 # GitHub Secrets required:
-#   AZURE_CREDENTIALS        - Azure service principal JSON
+#   AZURE_CLIENT_ID          - clientId from the JSON output
+#   AZURE_TENANT_ID          - tenantId from the JSON output
+#   AZURE_SUBSCRIPTION_ID    - subscriptionId from the JSON output
 #   REACT_APP_VERTEX_API_KEY - Vertex AI API key
 # GitHub Variables required:
 #   REACT_APP_GOOGLE_CLIENT_ID - Google OAuth client ID
@@ -70,7 +71,9 @@ jobs:
       - name: Azure Login
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
